@@ -1,0 +1,87 @@
+{
+  "list": [
+      {"invoice": {
+          "adjustment_credit_notes": [],
+          "amount_adjusted": 0,
+          "amount_due": 0,
+          "amount_paid": 1000,
+          "amount_to_collect": 0,
+          "applied_credits": [],
+          "base_currency_code": "USD",
+          "billing_address": {
+              "first_name": "John",
+              "last_name": "Mathew",
+              "object": "billing_address",
+              "validation_status": "not_validated"
+          },
+          "credits_applied": 0,
+          "currency_code": "USD",
+          "customer_id": "__test__KyVnJjRnFYtj763H",
+          "date": 1517469232,
+          "deleted": false,
+          "due_date": 1517469232,
+          "dunning_attempts": [],
+          "exchange_rate": 1,
+          "first_invoice": true,
+          "has_advance_charges": false,
+          "id": "__demo_inv__5",
+          "is_gifted": false,
+          "issued_credit_notes": [
+              {
+                  "cn_date": 1517469232,
+                  "cn_id": "__demo_cn__3",
+                  "cn_reason_code": "service_unsatisfactory",
+                  "cn_status": "refunded",
+                  "cn_total": 1000
+              }
+          ],
+          "line_items": [
+              {
+                  "amount": 1000,
+                  "customer_id": "__test__KyVnJjRnFYtj763H",
+                  "date_from": 1517469232,
+                  "date_to": 1517469232,
+                  "description": "Support Charge",
+                  "discount_amount": 0,
+                  "entity_type": "adhoc",
+                  "id": "li___test__KyVnJjRnFYtko63O",
+                  "is_taxed": false,
+                  "item_level_discount_amount": 0,
+                  "object": "line_item",
+                  "pricing_model": "flat_fee",
+                  "quantity": 1,
+                  "tax_amount": 0,
+                  "tax_exempt_reason": "tax_not_configured",
+                  "unit_amount": 1000
+              }
+          ],
+          "linked_orders": [],
+          "linked_payments": [
+              {
+                  "applied_amount": 1000,
+                  "applied_at": 1517469232,
+                  "txn_amount": 1000,
+                  "txn_date": 1517469232,
+                  "txn_id": "txn___test__KyVnJjRnFYtlE63P",
+                  "txn_status": "success"
+              }
+          ],
+          "net_term_days": 0,
+          "new_sales_amount": 1000,
+          "object": "invoice",
+          "paid_at": 1517469232,
+          "price_type": "tax_exclusive",
+          "recurring": false,
+          "resource_version": 1517469232000,
+          "round_off_amount": 0,
+          "status": "paid",
+          "sub_total": 1000,
+          "tax": 0,
+          "term_finalized": true,
+          "total": 1000,
+          "updated_at": 1517469232,
+          "write_off_amount": 0
+      }}
+  ],
+  "next_offset": "[\"1517469236000\",\"205000003470\"]"
+}

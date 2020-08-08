@@ -1,0 +1,6 @@
+[{
+  "id": "OPERATION_CONNECTORSTATUS_UNHANDLED",
+  "code": "12-001",
+  "component": "SyncAgent",
+  "message": "Failed to determine the status of the connector due to an unhandled error."
+}]

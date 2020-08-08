@@ -1,0 +1,24 @@
+{"list": [
+  {"customer": {
+      "allow_direct_debit": false,
+      "auto_collection": "on",
+      "card_status": "no_card",
+      "created_at": 1517469206,
+      "deleted": false,
+      "email": "john@test.com",
+      "excess_payments": 0,
+      "first_name": "John",
+      "id": "__test__KyVnJjRnFYn2A60g",
+      "last_name": "Doe",
+      "net_term_days": 0,
+      "object": "customer",
+      "pii_cleared": "active",
+      "preferred_currency_code": "USD",
+      "promotional_credits": 0,
+      "refundable_credits": 0,
+      "resource_version": 1517469206000,
+      "taxability": "taxable",
+      "unbilled_charges": 0,
+      "updated_at": 1517469206
+  }}
+]}

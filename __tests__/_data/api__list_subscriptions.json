@@ -1,0 +1,70 @@
+{
+  "list": [
+      {
+          "customer": {
+              "allow_direct_debit": false,
+              "auto_collection": "on",
+              "billing_address": {
+                  "city": "Walnut",
+                  "country": "US",
+                  "first_name": "John",
+                  "last_name": "Doe",
+                  "line1": "PO Box 9999",
+                  "object": "billing_address",
+                  "state": "California",
+                  "state_code": "CA",
+                  "validation_status": "not_validated",
+                  "zip": "91789"
+              },
+              "card_status": "no_card",
+              "created_at": 1578727804,
+              "deleted": false,
+              "email": "john@user.com",
+              "excess_payments": 0,
+              "first_name": "John",
+              "id": "__test__KyVnJjRnFcymP8oz",
+              "last_name": "Doe",
+              "net_term_days": 0,
+              "object": "customer",
+              "pii_cleared": "active",
+              "preferred_currency_code": "USD",
+              "promotional_credits": 0,
+              "refundable_credits": 0,
+              "resource_version": 1578727804000,
+              "taxability": "taxable",
+              "unbilled_charges": 0,
+              "updated_at": 1578727804
+          },
+          "subscription": {
+              "activated_at": 1578727804,
+              "auto_collection": "off",
+              "billing_period": 1,
+              "billing_period_unit": "month",
+              "created_at": 1578727804,
+              "currency_code": "USD",
+              "current_term_end": 1581406204,
+              "current_term_start": 1578727804,
+              "customer_id": "__test__KyVnJjRnFcymP8oz",
+              "deleted": false,
+              "due_invoices_count": 1,
+              "due_since": 1578727804,
+              "has_scheduled_changes": false,
+              "id": "__test__KyVnJjRnFcymP8oz",
+              "mrr": 0,
+              "next_billing_at": 1581406204,
+              "object": "subscription",
+              "plan_amount": 895,
+              "plan_free_quantity": 0,
+              "plan_id": "no_trial",
+              "plan_quantity": 1,
+              "plan_unit_price": 895,
+              "resource_version": 1578727804000,
+              "started_at": 1578727804,
+              "status": "active",
+              "total_dues": 895,
+              "updated_at": 1578727804
+          }
+      }
+  ],
+  "next_offset": "[\"1517470226000\",\"195000001593\"]"
+}

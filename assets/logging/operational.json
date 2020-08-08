@@ -1,0 +1,16 @@
+[{
+  "id": "OPERATION_CONNECTORSTATUS_START",
+  "code": "12-001",
+  "component": "SyncAgent",
+  "message": "Entered checking status of connector..."
+}, {
+  "id": "OPERATION_CONNECTORSTATUS_SUCCESS",
+  "code": "12-002",
+  "component": "SyncAgent",
+  "message": "Successfully checked status of connect."
+}, {
+  "id": "OPERATION_CONNECTORSTATUS_STARTHULLAPI",
+  "code": "12-003",
+  "component": "SyncAgent",
+  "message": "Sending connector status to Hull API..."
+}]
