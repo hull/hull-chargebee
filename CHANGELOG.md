@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.2
+
+- [Bugfix] Round timestamp always to nearest integer number for querystring parameters
+
 ## v1.0.1
 
 - [Maintenance] Remove console logging from staging and production

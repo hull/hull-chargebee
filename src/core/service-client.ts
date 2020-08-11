@@ -22,7 +22,7 @@ export class ServiceClient {
     const url = `https://${this.site}.chargebee.com/api/v2/customers`;
     const method: ApiMethod = "get";
     const params = {
-      "updated_at[after]": DateTime.fromISO(afterUpdatedAt).toSeconds(),
+      "updated_at[after]": Math.round(DateTime.fromISO(afterUpdatedAt).toSeconds()),
       "sort_by[desc]": "updated_at",
       limit: 100
     };
@@ -59,7 +59,7 @@ export class ServiceClient {
     const url = `https://${this.site}.chargebee.com/api/v2/subscriptions`;
     const method: ApiMethod = "get";
     const params = {
-      "updated_at[after]": DateTime.fromISO(afterUpdatedAt).toSeconds(),
+      "updated_at[after]": Math.round(DateTime.fromISO(afterUpdatedAt).toSeconds()),
       "sort_by[desc]": "updated_at",
       limit: 100,
       "customer_id[in]": undefined as any
@@ -103,7 +103,7 @@ export class ServiceClient {
     const url = `https://${this.site}.chargebee.com/api/v2/invoices`;
     const method: ApiMethod = "get";
     const params = {
-      "updated_at[after]": DateTime.fromISO(afterUpdatedAt).toSeconds(),
+      "updated_at[after]": Math.round(DateTime.fromISO(afterUpdatedAt).toSeconds()),
       "sort_by[desc]": "updated_at",
       limit: 100,
       "customer_id[in]": undefined as any
