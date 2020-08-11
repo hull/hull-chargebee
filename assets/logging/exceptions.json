@@ -1,6 +1,36 @@
 [{
-  "id": "OPERATION_CONNECTORSTATUS_UNHANDLED",
+  "id": "OPERATION_FETCHCUSTOMERS_UNHANDLED",
   "code": "12-001",
+  "component": "SyncAgent",
+  "message": "Failed to fetch customers due to an unhandled error."
+}, {
+  "id": "OPERATION_FETCHCUSTOMERS_APIFAIL",
+  "code": "12-002",
+  "component": "SyncAgent",
+  "message": "Failed to fetch customers from the Chargebee API."
+}, {
+  "id": "OPERATION_FETCHINVOICES_UNHANDLED",
+  "code": "13-001",
+  "component": "SyncAgent",
+  "message": "Failed to fetch invoices due to an unhandled error."
+}, {
+  "id": "OPERATION_FETCHINVOICES_APIFAIL",
+  "code": "13-002",
+  "component": "SyncAgent",
+  "message": "Failed to fetch invoices from the Chargebee API."
+}, {
+  "id": "OPERATION_FETCHSUBSCRIPTIONS_UNHANDLED",
+  "code": "14-001",
+  "component": "SyncAgent",
+  "message": "Failed to fetch subscriptions due to an unhandled error."
+}, {
+  "id": "OPERATION_FETCHSUBSCRIPTIONS_APIFAIL",
+  "code": "14-002",
+  "component": "SyncAgent",
+  "message": "Failed to fetch subscriptions from the Chargebee API."
+}, {
+  "id": "OPERATION_CONNECTORSTATUS_UNHANDLED",
+  "code": "19-001",
   "component": "SyncAgent",
   "message": "Failed to determine the status of the connector due to an unhandled error."
 }]

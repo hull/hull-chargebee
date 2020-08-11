@@ -1,7 +1,7 @@
 import { StringLiteral } from "babel-types";
 
 export interface IHullUserEventProps {
-  [propName: string]: string | number | boolean | string[] | null | undefined;
+  [propName: string]: string | number | boolean | string[] | object | null | undefined;
 }
 
 export interface IHullUserEventContext {
@@ -17,6 +17,7 @@ export interface IHullUserEventContext {
   ip?: string | number;
   event_id?: string | null;
   source?: string | null;
+  created_at?: string | number | null;
 }
 
 export default interface IHullUserEvent {

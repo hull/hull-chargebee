@@ -234,8 +234,13 @@ export class ConnectorRedisClient {
               return resolve(undefined);
             }
 
-            const data = JSON.parse(result) as T;
-            return resolve(data);
+            try {
+              const data = JSON.parse(result) as T;
+              return resolve(data);
+            } catch (error) {
+              return resolve(result as any);
+            }
+
           },
         );
       },

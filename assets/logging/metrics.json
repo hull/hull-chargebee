@@ -1,6 +1,21 @@
 [{
-  "id": "OPERATION_SENDUSERMESSAGES_COUNT",
-  "code": "10-001",
+  "id": "OPERATION_FETCHCUSTOMERS_COUNT",
+  "code": "12-001",
   "component": "SyncAgent",
-  "metricKey": "SN-USERUPDATE-MSG"
+  "metricKey": "APP-READ-JOB"
+}, {
+  "id": "OPERATION_FETCHINVOICES_COUNT",
+  "code": "13-001",
+  "component": "SyncAgent",
+  "metricKey": "APP-READ-JOB"
+}, {
+  "id": "OPERATION_FETCHSUBSCRIPIONS_COUNT",
+  "code": "13-001",
+  "component": "SyncAgent",
+  "metricKey": "APP-READ-JOB"
+}, {
+  "id": "OPERATION_SVCLIENTAPICALL_COUNT",
+  "code": "80-001",
+  "component": "SyncAgent",
+  "metricKey": "SVC-API-CALL"
 }]

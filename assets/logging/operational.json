@@ -1,16 +1,76 @@
 [{
-  "id": "OPERATION_CONNECTORSTATUS_START",
+  "id": "OPERATION_FETCHCUSTOMERS_START",
   "code": "12-001",
+  "component": "SyncAgent",
+  "message": "Entered fetching customers..."
+}, {
+  "id": "OPERATION_FETCHCUSTOMERS_NOOP",
+  "code": "12-002",
+  "component": "SyncAgent",
+  "message": "No-op detected, incoming resolution is set to null."
+}, {
+  "id": "OPERATION_FETCHCUSTOMERS_SUCCESS",
+  "code": "12-003",
+  "component": "SyncAgent",
+  "message": "Successfully fetched customers from Chargebee."
+}, {
+  "id": "OPERATION_FETCHCUSTOMERS_UPDATELASTRUNCACHE_START",
+  "code": "12-004",
+  "component": "SyncAgent",
+  "message": "Updating cache for last run time..."
+}, {
+  "id": "OPERATION_FETCHINVOICES_START",
+  "code": "13-001",
+  "component": "SyncAgent",
+  "message": "Entered fetching customers..."
+}, {
+  "id": "OPERATION_FETCHINVOICES_NOOP",
+  "code": "13-002",
+  "component": "SyncAgent",
+  "message": "No-op detected, incoming resolution is set to null."
+}, {
+  "id": "OPERATION_FETCHINVOICES_SUCCESS",
+  "code": "13-003",
+  "component": "SyncAgent",
+  "message": "Successfully fetched customers from Chargebee."
+}, {
+  "id": "OPERATION_FETCHINVOICES_UPDATELASTRUNCACHE_START",
+  "code": "13-004",
+  "component": "SyncAgent",
+  "message": "Updating cache for last run time..."
+}, {
+  "id": "OPERATION_FETCHSUBSCRIPTIONS_START",
+  "code": "14-001",
+  "component": "SyncAgent",
+  "message": "Entered fetching customers..."
+}, {
+  "id": "OPERATION_FETCHSUBSCRIPTIONS_NOOP",
+  "code": "14-002",
+  "component": "SyncAgent",
+  "message": "No-op detected, incoming resolution is set to null."
+}, {
+  "id": "OPERATION_FETCHSUBSCRIPTIONS_SUCCESS",
+  "code": "14-003",
+  "component": "SyncAgent",
+  "message": "Successfully fetched customers from Chargebee."
+}, {
+  "id": "OPERATION_FETCHSUBSCRIPTIONS_UPDATELASTRUNCACHE_START",
+  "code": "14-004",
+  "component": "SyncAgent",
+  "message": "Updating cache for last run time..."
+}, {
+  "id": "OPERATION_CONNECTORSTATUS_START",
+  "code": "19-001",
   "component": "SyncAgent",
   "message": "Entered checking status of connector..."
 }, {
   "id": "OPERATION_CONNECTORSTATUS_SUCCESS",
-  "code": "12-002",
+  "code": "19-002",
   "component": "SyncAgent",
   "message": "Successfully checked status of connect."
 }, {
   "id": "OPERATION_CONNECTORSTATUS_STARTHULLAPI",
-  "code": "12-003",
+  "code": "19-003",
   "component": "SyncAgent",
   "message": "Sending connector status to Hull API..."
 }]

@@ -1,7 +1,10 @@
 export interface PrivateSettings {
   chargebee_site?: string | null;
   chargebee_api_key?: string | null;
-  
+  incoming_resolution_user: "external_id" | "email" | "none";
+  incoming_resolution_account: "external_id" | "none";
+  aggregation_account_invoices: boolean;
+  aggregation_account_subscriptions: boolean;
 }
 
 export interface LogPayload {
@@ -16,3 +19,9 @@ export interface LogPayload {
   tenantId: string;
   correlationKey?: string;
 }
+
+export type InvoiceAggregationType = "first" | "last";
+
+export type ConnectorReadType = "all" | "incremental";
+
+export type ConnectorFetchObjectType = "customers" | "invoices" | "subscriptions";

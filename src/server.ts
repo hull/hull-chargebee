@@ -85,49 +85,11 @@ export const server = (app: Application): Application => {
   // Set the view engine to ejs
   app.set("view engine", "ejs");
 
-  // Hull platform handler endpoints
-  app.post("/smart-notifier", (req, res, next) => {
-    smartNotifierHandler({
-      handlers: {
-        "user:update": actions.userUpdate({
-          flowControl: {
-            type: "next",
-            size: parseInt(_.get(process.env.FLOW_CONTROL_SIZE, "30"), 10),
-            in: parseInt(_.get(process.env.FLOW_CONTROL_IN, "5"), 10),
-            in_time: parseInt(
-              _.get(process.env.FLOW_CONTROL_IN_TIME, "60000"),
-              10,
-            ),
-          },
-          req,
-        }),
-      },
-    })(req, res, next);
-  });
-
-  app.post("/batch", (req, res, next) => {
-    smartNotifierHandler({
-      userHandlerOptions: {
-        groupTraits: false,
-      },
-      handlers: {
-        "user:update": actions.userUpdate({ isBatch: true, req }),
-      },
-    })(req, res, next);
-  });
-
   // CORS enabled endpoints
-  app.use("/meta/service/:type", cors(), actions.serviceMeta());
-
-  // OAuth handler endpoints
-  app.get("/oauth/", cors(), actions.oauthInit());
-  app.get("/oauth/callback", cors(), actions.oauthCallback());
-
-  // Fetch endpoints
+  app.use("/fetch/:objecttype/:mode", cors(), actions.fetch());
 
   // Status endpoints
   app.use("/status", actions.status());
-  app.use("/oauth/status", cors(), actions.oauthStatus());
 
   // Dispose the container when the server closes
   app.on("close", () => {

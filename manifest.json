@@ -16,9 +16,144 @@
   "picture": "picture.png",
   "ui": false,
   "settings": [],
-  "private_settings": [],
-  "json": [],
-  "schedules": [],
+  "private_settings": [
+    {
+      "name": "chargebee_site",
+      "title": "Chargbee Site ID",
+      "description": "Your Chargebee site ID, get it from the url `https://{site}.chargebee.com`",
+      "type": "string"
+    },
+    {
+      "name": "chargebee_api_key",
+      "title": "Chargebee API Key",
+      "description": "Your Chargebee API Key, get it from Settings > API Keys and Webhooks",
+      "type": "string"
+    },
+    {
+      "name": "incoming_resolution_user",
+      "title": "Resolution User",
+      "description": "Choose the identifier to correlate data to the user or select none to not store any data on the user.",
+      "type": "string",
+      "enum": ["external_id", "email", "none"],
+      "default": "none"
+    },
+    {
+      "name": "incoming_resolution_account",
+      "title": "Resolution Account",
+      "description": "Choose the identifier to correlate data to the account or select none to not store any data on the account.",
+      "type": "string",
+      "enum": ["external_id", "none"],
+      "default": "none"
+    },
+    {
+      "name": "aggregation_account_invoices",
+      "title": "Aggregation Invoices",
+      "description": "Choose to store aggregated invoice data on the account level.",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "aggregation_account_subscriptions",
+      "title": "Aggregation Subscriptions",
+      "description": "Choose to store aggregated subscription data on the account level.",
+      "type": "boolean",
+      "default": false
+    }
+  ],
+  "json": [
+    {
+      "title": "Fetch All Customers",
+      "name": "fetch_all_customers",
+      "format": "button",
+      "url": "/fetch/customers/all",
+      "handler": "fetch",
+      "options": {
+        "fireAndForget": true,
+        "confirm": {
+          "action": "fetch",
+          "text": "You are about to pull all Customers from Chargebee into Hull. Be careful when clicking this multiple times, it can result in long operations. Check out the \"Logs\" tab to track `incoming.*.success` messages as customer data is ingested.",
+          "button": "Start Fetching Customers",
+          "entity": "users"
+        }
+      }
+    },
+    {
+      "title": "Fetch All Invoices",
+      "name": "fetch_all_invoices",
+      "format": "button",
+      "url": "/fetch/invoices/all",
+      "handler": "fetch",
+      "options": {
+        "fireAndForget": true,
+        "confirm": {
+          "action": "fetch",
+          "text": "You are about to pull all Invoices from Chargebee into Hull. Be careful when clicking this multiple times, it can result in long operations. Check out the \"Logs\" tab to track `incoming.*.success` messages as invoice data is ingested.",
+          "button": "Start Fetching Invoices",
+          "entity": "events"
+        }
+      }
+    },
+    {
+      "title": "Fetch All Subscriptions",
+      "name": "fetch_all_subscriptions",
+      "format": "button",
+      "url": "/fetch/subscriptions/all",
+      "handler": "fetch",
+      "options": {
+        "fireAndForget": true,
+        "confirm": {
+          "action": "fetch",
+          "text": "You are about to pull all Subscriptions from Chargebee into Hull. Be careful when clicking this multiple times, it can result in long operations. Check out the \"Logs\" tab to track `incoming.*.success` messages as invoice data is ingested.",
+          "button": "Start Fetching Subscriptions",
+          "entity": "events"
+        }
+      }
+    }
+  ],
+  "schedules": [
+    {
+      "url": "/status",
+      "type": "interval",
+      "value": "30"
+    },
+    {
+      "url": "/fetch/customers/incremental",
+      "type": "interval",
+      "value": "30"
+    },
+    {
+      "url": "/fetch/invoices/incremental",
+      "type": "interval",
+      "value": "30"
+    },
+    {
+      "url": "/fetch/subscriptions/incremental",
+      "type": "interval",
+      "value": "30"
+    }
+  ],
   "subscriptions": [],
-  "settings_sections": []
+  "settings_sections": [
+    {
+      "title": "Chargebee Connection",
+      "description": "Authorize the Connector to access the Chargebee API on your behalf using your api token.",
+      "properties": ["private_settings.chargebee_site", "private_settings.chargebee_api_key"]
+    },
+    {
+      "title": "Incoming Data",
+      "description": "Define how Hull resolves incoming data to users and accounts and manually fetch data.",
+      "properties": [
+        "private_settings.incoming_resolution_user",
+        "private_settings.incoming_resolution_account",
+        "json.fetch_all_customers",
+        "json.fetch_all_invoices",
+        "json.fetch_all_subscriptions"
+      ]
+    },
+    {
+      "title": "Aggregated Data",
+      "description": "Define how Hull aggregates data on the account level. Note this only works if **Resolution Account** is set to `external_id`.",
+      "properties": ["private_settings.aggregation_account_invoices", "private_settings.aggregation_account_subscriptions"]
+    }
+  ]
 }
