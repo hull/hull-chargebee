@@ -1,16 +1,12 @@
 {
   "name": "Chargebee [BETA]",
   "tags": [
-    "outgoing",
-    "oneColumn",
-    "batch",
-    "batch-accounts",
-    "smart-notifier"
+    "oneColumn"
   ],
   "description": "Chargebee Connector for Hull",
   "readme": "readme.md",
   "tabs": [],
-  "version": "0.1.0",
+  "version": "1.0.0",
   "source": "chargebee",
   "logo": "logo.png",
   "picture": "picture.png",
