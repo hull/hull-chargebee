@@ -26,7 +26,17 @@ export const server = (app: Application): Application => {
   // Add console as transport since we don't use a dedicated transport
   // but rely on the OS to ship logs
   loggerOptions.transports = [
-    new transports.Console({
+    new LogzioWinstonTransport({
+      token: process.env.LOGZIO_TOKEN as string,
+      host: "listener.logz.io",
+      protocol: "https",
+      name: loggerOptions.defaultMeta.service,
+      level: process.env.LOG_LEVEL || "error",
+    }),
+  ];
+
+  if (process.env.NODE_ENV === "development") {
+    loggerOptions.transports.push(new transports.Console({
       format: format.combine(
         format.colorize({ all: true }),
         format.timestamp(),
@@ -53,15 +63,8 @@ export const server = (app: Application): Application => {
           }`;
         }),
       ),
-    }),
-    new LogzioWinstonTransport({
-      token: process.env.LOGZIO_TOKEN as string,
-      host: "listener.logz.io",
-      protocol: "https",
-      name: loggerOptions.defaultMeta.service,
-      level: process.env.LOG_LEVEL || "error",
-    }),
-  ];
+    }));
+  }
 
   const globalLogger = createLogger(loggerOptions);
 
