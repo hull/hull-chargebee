@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.3
+
+- [Maintenance] Add message to captured metrics by default
+
 ## v1.0.2
 
 - [Bugfix] Round timestamp always to nearest integer number for querystring parameters
