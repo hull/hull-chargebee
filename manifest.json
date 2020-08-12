@@ -6,7 +6,7 @@
   "description": "Chargebee Connector for Hull",
   "readme": "readme.md",
   "tabs": [],
-  "version": "1.0.2",
+  "version": "1.0.3",
   "source": "chargebee",
   "logo": "logo.png",
   "picture": "picture.png",

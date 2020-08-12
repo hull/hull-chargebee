@@ -96,6 +96,7 @@ export class LoggingUtil {
       correlationKey,
       metricKey: def.metricKey,
       metricValue,
+      message: `Captured metric '${def.metricKey}' with value of '${metricValue}'`
     };
 
     return log;
