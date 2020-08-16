@@ -6,14 +6,13 @@
   "description": "Chargebee Connector for Hull",
   "readme": "readme.md",
   "tabs": [],
-  "version": "1.0.3",
+  "version": "1.0.4",
   "source": "chargebee",
   "logo": "logo.png",
   "picture": "picture.png",
   "ui": false,
   "settings": [],
-  "private_settings": [
-    {
+  "private_settings": [{
       "name": "chargebee_site",
       "title": "Chargbee Site ID",
       "description": "Your Chargebee site ID, get it from the url `https://{site}.chargebee.com`",
@@ -56,8 +55,7 @@
       "default": false
     }
   ],
-  "json": [
-    {
+  "json": [{
       "title": "Fetch All Customers",
       "name": "fetch_all_customers",
       "format": "button",
@@ -106,8 +104,7 @@
       }
     }
   ],
-  "schedules": [
-    {
+  "schedules": [{
       "url": "/status",
       "type": "interval",
       "value": "30"
@@ -129,8 +126,7 @@
     }
   ],
   "subscriptions": [],
-  "settings_sections": [
-    {
+  "settings_sections": [{
       "title": "Chargebee Connection",
       "description": "Authorize the Connector to access the Chargebee API on your behalf using your api token.",
       "properties": ["private_settings.chargebee_site", "private_settings.chargebee_api_key"]
