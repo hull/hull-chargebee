@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.4
+
+- [Bugfix] Update first_invoice on incremental fetches if aggregation is enabled to avoid full fetch
+
 ## v1.0.3
 
 - [Maintenance] Add message to captured metrics by default
