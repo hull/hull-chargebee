@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.5
+
+- [Feature] Prep for LTV feature and always fetch all invoices for customer
+
 ## v1.0.4
 
 - [Bugfix] Update first_invoice on incremental fetches if aggregation is enabled to avoid full fetch
