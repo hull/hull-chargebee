@@ -35,10 +35,14 @@ export class ConnectorRedisClient {
       method: "set<T>",
     };
 
-    let redisVal = JSON.stringify(value);
+    let redisVal: string;
+
     if (typeof value === "string") {
       redisVal = value;
+    } else {
+      redisVal = JSON.stringify(value);
     }
+
     this.logger.debug({
       message: `Setting key ${key} in Redis to value '${redisVal}' ${
         expiresSecs
@@ -240,7 +244,6 @@ export class ConnectorRedisClient {
             } catch (error) {
               return resolve(result as any);
             }
-
           },
         );
       },

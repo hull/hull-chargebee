@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.7
+
+- [Maintenance] Improve RedisClient set operation to avoid casting on string types.
+
 ## v1.0.6
 
 - [Bugfix] Add locks to all fetch operations to avoid using additional quota and prevent parallel fetches.
