@@ -19,6 +19,11 @@
   "component": "SyncAgent",
   "message": "Updating cache for last run time..."
 }, {
+  "id": "OPERATION_FETCHCUSTOMERS_SKIPLOCK",
+  "code": "12-005",
+  "component": "SyncAgent",
+  "message": "A fetch for customers is already in progress. Skipping..."
+}, {
   "id": "OPERATION_FETCHINVOICES_START",
   "code": "13-001",
   "component": "SyncAgent",
@@ -39,6 +44,11 @@
   "component": "SyncAgent",
   "message": "Updating cache for last run time..."
 }, {
+  "id": "OPERATION_FETCHINVOICES_SKIPLOCK",
+  "code": "13-005",
+  "component": "SyncAgent",
+  "message": "A fetch for invoices is already in progress. Skipping..."
+}, {
   "id": "OPERATION_FETCHSUBSCRIPTIONS_START",
   "code": "14-001",
   "component": "SyncAgent",
@@ -58,6 +68,11 @@
   "code": "14-004",
   "component": "SyncAgent",
   "message": "Updating cache for last run time..."
+}, {
+  "id": "OPERATION_FETCHSUBSCRIPTIONS_SKIPLOCK",
+  "code": "14-005",
+  "component": "SyncAgent",
+  "message": "A fetch for subscriptions is already in progress. Skipping..."
 }, {
   "id": "OPERATION_CONNECTORSTATUS_START",
   "code": "19-001",
