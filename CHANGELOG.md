@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.6
+
+- [Bugfix] Add locks to all fetch operations to avoid using additional quota and prevent parallel fetches.
+
 ## v1.0.5
 
 - [Feature] Prep for LTV feature and always fetch all invoices for customer
