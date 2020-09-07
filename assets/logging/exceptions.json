@@ -9,6 +9,11 @@
   "component": "SyncAgent",
   "message": "Failed to fetch customers from the Chargebee API."
 }, {
+  "id": "OPERATION_FETCHCUSTOMERS_RELEASELOCKFAIL",
+  "code": "12-003",
+  "component": "SyncAgent",
+  "message": "Failed to release the lock for fetching customers."
+}, {
   "id": "OPERATION_FETCHINVOICES_UNHANDLED",
   "code": "13-001",
   "component": "SyncAgent",
@@ -19,6 +24,11 @@
   "component": "SyncAgent",
   "message": "Failed to fetch invoices from the Chargebee API."
 }, {
+  "id": "OPERATION_FETCHINVOICES_RELEASELOCKFAIL",
+  "code": "13-003",
+  "component": "SyncAgent",
+  "message": "Failed to release the lock for fetching invoices."
+}, {
   "id": "OPERATION_FETCHSUBSCRIPTIONS_UNHANDLED",
   "code": "14-001",
   "component": "SyncAgent",
@@ -28,6 +38,11 @@
   "code": "14-002",
   "component": "SyncAgent",
   "message": "Failed to fetch subscriptions from the Chargebee API."
+}, {
+  "id": "OPERATION_FETCHSUBSCRIPTIONS_RELEASELOCKFAIL",
+  "code": "14-003",
+  "component": "SyncAgent",
+  "message": "Failed to release the lock for fetching subscriptions."
 }, {
   "id": "OPERATION_CONNECTORSTATUS_UNHANDLED",
   "code": "19-001",

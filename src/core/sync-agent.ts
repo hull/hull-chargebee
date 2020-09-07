@@ -117,6 +117,28 @@ export class SyncAgent {
       let updatedAfter = DateTime.fromISO("2016-09-29T00:00:00.000Z");
       const currentRunStart = DateTime.utc().toISO();
 
+      // Check if a lock is present
+      let currentLock = await redisClient.get<string>(
+        `${connectorId}_customers_lock`,
+      );
+
+      if (currentLock !== undefined) {
+        logger.info(
+          loggingUtil.composeOperationalMessage(
+            "OPERATION_FETCHCUSTOMERS_SKIPLOCK",
+            correlationKey,
+          ),
+        );
+        return;
+      }
+
+      // Set a lock to prevent parallel fetches (auto-expire after 6 hours)
+      await redisClient.set<string>(
+        `${connectorId}_customers_lock`,
+        correlationKey,
+        60 * 60 * 6,
+      );
+
       if (readType === "incremental") {
         const latestCached = await redisClient.get<string>(
           `${connectorId}_customers_last`,
@@ -229,6 +251,23 @@ export class SyncAgent {
         object_type: "customer",
         read_mode: readType,
       });
+    } finally {
+      // Release the lock, regardless of the outcome of the operation
+      try {
+        const connectorId = this.diContainer.resolve<string>("hullAppId");
+        const redisClient = this.diContainer.resolve<ConnectorRedisClient>(
+          "redisClient",
+        );
+        await redisClient.delete(`${connectorId}_customers_lock`);
+      } catch (error) {
+        logger.error(
+          loggingUtil.composeErrorMessage(
+            "OPERATION_FETCHCUSTOMERS_RELEASELOCKFAIL",
+            error,
+            correlationKey,
+          ),
+        );
+      }
     }
   }
 
@@ -295,6 +334,28 @@ export class SyncAgent {
 
       let updatedAfter = DateTime.fromISO("2016-09-29T00:00:00.000Z");
       const currentRunStart = DateTime.utc().toISO();
+
+      // Check if a lock is present
+      let currentLock = await redisClient.get<string>(
+        `${connectorId}_invoices_lock`,
+      );
+
+      if (currentLock !== undefined) {
+        logger.info(
+          loggingUtil.composeOperationalMessage(
+            "OPERATION_FETCHINVOICES_SKIPLOCK",
+            correlationKey,
+          ),
+        );
+        return;
+      }
+
+      // Set a lock to prevent parallel fetches (auto-expire after 6 hours)
+      await redisClient.set<string>(
+        `${connectorId}_invoices_lock`,
+        correlationKey,
+        60 * 60 * 6,
+      );
 
       if (readType === "incremental") {
         const latestCached = await redisClient.get<string>(
@@ -453,6 +514,23 @@ export class SyncAgent {
         object_type: "invoice",
         read_mode: readType,
       });
+    } finally {
+      // Release the lock, regardless of the outcome of the operation
+      try {
+        const connectorId = this.diContainer.resolve<string>("hullAppId");
+        const redisClient = this.diContainer.resolve<ConnectorRedisClient>(
+          "redisClient",
+        );
+        await redisClient.delete(`${connectorId}_invoices_lock`);
+      } catch (error) {
+        logger.error(
+          loggingUtil.composeErrorMessage(
+            "OPERATION_FETCHINVOICES_RELEASELOCKFAIL",
+            error,
+            correlationKey,
+          ),
+        );
+      }
     }
   }
 
@@ -564,6 +642,28 @@ export class SyncAgent {
         "serviceClient",
       );
       const mappingUtil = this.diContainer.resolve<MappingUtil>("mappingUtil");
+
+      // Check if a lock is present
+      let currentLock = await redisClient.get<string>(
+        `${connectorId}_subscriptions_lock`,
+      );
+
+      if (currentLock !== undefined) {
+        logger.info(
+          loggingUtil.composeOperationalMessage(
+            "OPERATION_FETCHSUBSCRIPTIONS_SKIPLOCK",
+            correlationKey,
+          ),
+        );
+        return;
+      }
+
+      // Set a lock to prevent parallel fetches (auto-expire after 6 hours)
+      await redisClient.set<string>(
+        `${connectorId}_subscriptions_lock`,
+        correlationKey,
+        60 * 60 * 6,
+      );
 
       let updatedAfter = DateTime.fromISO("2016-09-29T00:00:00.000Z");
       const currentRunStart = DateTime.utc().toISO();
@@ -750,6 +850,23 @@ export class SyncAgent {
         object_type: "subscription",
         read_mode: readType,
       });
+    } finally {
+      // Release the lock, regardless of the outcome of the operation
+      try {
+        const connectorId = this.diContainer.resolve<string>("hullAppId");
+        const redisClient = this.diContainer.resolve<ConnectorRedisClient>(
+          "redisClient",
+        );
+        await redisClient.delete(`${connectorId}_subscriptions_lock`);
+      } catch (error) {
+        logger.error(
+          loggingUtil.composeErrorMessage(
+            "OPERATION_FETCHSUBSCRIPTIONS_RELEASELOCKFAIL",
+            error,
+            correlationKey,
+          ),
+        );
+      }
     }
   }
 
