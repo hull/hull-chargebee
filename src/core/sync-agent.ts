@@ -660,27 +660,20 @@ export class SyncAgent {
           throw new Error(ERROR_CHARGEBEEAPI_READ("events"));
         }
         if (responseEvents.data) {
-          console.log(responseEvents.data);
           nextOffset = responseEvents.data.next_offset;
           await asyncForEach(
             responseEvents.data.list,
             async (listItem: { event: ChargebeeEvent }) => {
-              console.log(listItem.event);
               const eventOccurence = DateTime.fromSeconds(
                 listItem.event.occurred_at,
               );
-              console.log(eventOccurence.toISO());
               if (eventOccurence < occurredAfter) {
                 return;
               }
               const incomingResults = mappingUtil.mapChargebeeEventIncoming(
                 listItem.event,
               );
-              console.log(JSON.stringify(incomingResults));
-              const hullResult = await hullUtil.processIncomingData(
-                incomingResults,
-              );
-              console.log(hullResult);
+              await hullUtil.processIncomingData(incomingResults);
               // If we receive a subscription event, add the customer id to the list if handling of accounts is active
               if (
                 connectorSettings.incoming_resolution_account !== "none" &&
@@ -723,11 +716,9 @@ export class SyncAgent {
               }
             },
           );
-          console.log("Chunk processed.");
         } else {
           nextOffset = undefined;
         }
-        console.log(nextOffset);
         hasMore = !isNil(nextOffset);
         await redisClient.set(
           `${connectorId}_events_lock`,

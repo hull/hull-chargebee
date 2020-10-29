@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.9
+
+- [Maintenance] Code clean-up on `sync-agent` and `service-client`.
+
 ## v1.0.8
 
 - [Feature] Improve synchronization frequency from 30 to 5 minutes and reduce data sent to the Hull platform.
