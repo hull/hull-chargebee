@@ -782,7 +782,7 @@ export class MappingUtil {
         );
         combinedAttribs = {
           ...combinedAttribs,
-          subAttribs,
+          ...subAttribs,
         };
       }
 
@@ -793,7 +793,7 @@ export class MappingUtil {
       );
       combinedAttribs = {
         ...combinedAttribs,
-        subAttribsLatest,
+        ...subAttribsLatest,
       };
     } else {
       for (let index = 0; index < sortedSubscriptions.length; index++) {
@@ -804,7 +804,7 @@ export class MappingUtil {
         );
         combinedAttribs = {
           ...combinedAttribs,
-          subAttribs,
+          ...subAttribs,
         };
       }
     }

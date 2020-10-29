@@ -256,7 +256,6 @@ export class ServiceClient {
         AxiosError
       >(fullUrl, method, undefined, response.data);
     } catch (error) {
-      console.error(error);
       return ApiUtil.handleApiResultError<
         undefined,
         ListResult<{ event: ChargebeeEvent }>,
