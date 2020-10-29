@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file, @typescript-eslint/no-explicit-any */
 
 declare module "hull" {
-  import { Logger, loggers } from "winston";
+  import { Logger } from "winston";
   import { Application } from "express";
 
   const logger: Logger;

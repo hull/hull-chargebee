@@ -22,10 +22,15 @@ import {
   Invoice,
   Card,
   Subscription,
+  ChargebeeEvent,
+  ChargebeeEventType,
 } from "./service-objects";
 import { AxiosError } from "axios";
 import asyncForEach from "../utils/async-foreach";
 import { MappingUtil } from "../utils/mapping-util";
+import { HullUtil } from "../utils/hull-util";
+
+const CHARGEBEE_MINDATE = DateTime.fromISO("2016-09-29T00:00:00.000Z");
 
 export class SyncAgent {
   public readonly diContainer: AwilixContainer;
@@ -52,6 +57,7 @@ export class SyncAgent {
     );
     this.diContainer.register("serviceClient", asClass(ServiceClient).scoped());
     this.diContainer.register("mappingUtil", asClass(MappingUtil).scoped());
+    this.diContainer.register("hullUtil", asClass(HullUtil).scoped());
   }
 
   public async fetchCustomers(readType: ConnectorReadType): Promise<void> {
@@ -526,6 +532,311 @@ export class SyncAgent {
         logger.error(
           loggingUtil.composeErrorMessage(
             "OPERATION_FETCHINVOICES_RELEASELOCKFAIL",
+            error,
+            correlationKey,
+          ),
+        );
+      }
+    }
+  }
+
+  public async fetchEvents(): Promise<void> {
+    const logger = this.diContainer.resolve<Logger>("logger");
+    const loggingUtil = this.diContainer.resolve<LoggingUtil>("loggingUtil");
+    const correlationKey = this.diContainer.resolve<string>("correlationKey");
+    const hullClient = this.diContainer.resolve<IHullClient>("hullClient");
+    const hullUtil = this.diContainer.resolve<HullUtil>("hullUtil");
+
+    const currentRunStart = DateTime.utc().toISO();
+    try {
+      logger.info(
+        loggingUtil.composeMetricMessage(
+          "OPERATION_FETCHEVENTS_COUNT",
+          correlationKey,
+          1,
+        ),
+      );
+
+      const connectorSettings = this.diContainer.resolve<PrivateSettings>(
+        "hullAppSettings",
+      );
+
+      logger.debug(
+        loggingUtil.composeOperationalMessage(
+          "OPERATION_FETCHEVENTS_START",
+          correlationKey,
+        ),
+      );
+
+      hullClient.logger.info("incoming.job.start", {
+        correlation_key: correlationKey,
+        object_type: "events",
+        read_mode: "incremental",
+      });
+
+      const connectorId = this.diContainer.resolve<string>("hullAppId");
+      const redisClient = this.diContainer.resolve<ConnectorRedisClient>(
+        "redisClient",
+      );
+      const serviceClient = this.diContainer.resolve<ServiceClient>(
+        "serviceClient",
+      );
+      const mappingUtil = this.diContainer.resolve<MappingUtil>("mappingUtil");
+
+      // Check if a lock is present
+      let currentLock = await redisClient.get<string>(
+        `${connectorId}_events_lock`,
+      );
+
+      if (currentLock !== undefined) {
+        logger.info(
+          loggingUtil.composeOperationalMessage(
+            "OPERATION_FETCHEVENTS_SKIPLOCK",
+            correlationKey,
+          ),
+        );
+        return;
+      }
+
+      await redisClient.set(
+        `${connectorId}_events_lock`,
+        currentRunStart,
+        60 * 15,
+      );
+
+      // Get the latest cached run date
+      let occurredAfter = DateTime.utc().minus({ hours: 1 });
+      const latestCached = await redisClient.get<string>(
+        `${connectorId}_events_last`,
+      );
+      if (latestCached !== undefined) {
+        occurredAfter = DateTime.fromISO(latestCached);
+      }
+
+      // Retrieve all events
+      const events: ChargebeeEventType[] = [
+        "customer_created",
+        "customer_changed",
+        "customer_deleted",
+        "invoice_generated",
+        "invoice_updated",
+        "invoice_deleted",
+        "subscription_created",
+        "subscription_changed",
+        "subscription_deleted",
+        "subscription_cancelled",
+      ];
+      let hasMore: boolean = true;
+      let nextOffset: string | undefined = undefined;
+      const customerIdsToFetchSubscriptions: string[] = [];
+      const customerIdsToFetchInvoices: string[] = [];
+      while (hasMore) {
+        logger.info(
+          loggingUtil.composeMetricMessage(
+            "OPERATION_SVCLIENTAPICALL_COUNT",
+            correlationKey,
+            1,
+          ),
+        );
+
+        const responseEvents: ApiResultObject<
+          undefined,
+          ListResult<{ event: ChargebeeEvent }>,
+          AxiosError
+        > = await serviceClient.listEvents(
+          occurredAfter.toISO() as string,
+          events,
+          nextOffset,
+        );
+        if (responseEvents.success === false) {
+          logger.error(
+            loggingUtil.composeErrorMessage(
+              "OPERATION_FETCHEVENTS_APIFAIL",
+              responseEvents.errorDetails,
+              correlationKey,
+            ),
+          );
+
+          throw new Error(ERROR_CHARGEBEEAPI_READ("events"));
+        }
+        if (responseEvents.data) {
+          console.log(responseEvents.data);
+          nextOffset = responseEvents.data.next_offset;
+          await asyncForEach(
+            responseEvents.data.list,
+            async (listItem: { event: ChargebeeEvent }) => {
+              console.log(listItem.event);
+              const eventOccurence = DateTime.fromSeconds(
+                listItem.event.occurred_at,
+              );
+              console.log(eventOccurence.toISO());
+              if (eventOccurence < occurredAfter) {
+                return;
+              }
+              const incomingResults = mappingUtil.mapChargebeeEventIncoming(
+                listItem.event,
+              );
+              console.log(JSON.stringify(incomingResults));
+              const hullResult = await hullUtil.processIncomingData(
+                incomingResults,
+              );
+              console.log(hullResult);
+              // If we receive a subscription event, add the customer id to the list if handling of accounts is active
+              if (
+                connectorSettings.incoming_resolution_account !== "none" &&
+                connectorSettings.aggregation_account_subscriptions
+              ) {
+                if (
+                  listItem.event.event_type.startsWith("subscription_") &&
+                  !isNil(listItem.event.content.subscription)
+                ) {
+                  if (
+                    !customerIdsToFetchSubscriptions.includes(
+                      listItem.event.content.subscription.customer_id,
+                    )
+                  ) {
+                    customerIdsToFetchSubscriptions.push(
+                      listItem.event.content.subscription.customer_id,
+                    );
+                  }
+                }
+              }
+              // If we receive an invoice event, add the customer id to the list if handling of accounts is active
+              if (
+                connectorSettings.incoming_resolution_account !== "none" &&
+                connectorSettings.aggregation_account_invoices
+              ) {
+                if (
+                  listItem.event.event_type.startsWith("invoice_") &&
+                  !isNil(listItem.event.content.invoice)
+                ) {
+                  if (
+                    !customerIdsToFetchInvoices.includes(
+                      listItem.event.content.invoice.customer_id,
+                    )
+                  ) {
+                    customerIdsToFetchInvoices.push(
+                      listItem.event.content.invoice.customer_id,
+                    );
+                  }
+                }
+              }
+            },
+          );
+          console.log("Chunk processed.");
+        } else {
+          nextOffset = undefined;
+        }
+        console.log(nextOffset);
+        hasMore = !isNil(nextOffset);
+        await redisClient.set(
+          `${connectorId}_events_lock`,
+          currentRunStart,
+          60 * 15,
+        );
+      }
+
+      // If we have subscriptions to process for accounts, execute
+      if (customerIdsToFetchSubscriptions.length !== 0) {
+        await asyncForEach(
+          customerIdsToFetchSubscriptions,
+          async (customerId: string) => {
+            const subscriptions = await this.fetchSubscriptionsForCustomer(
+              CHARGEBEE_MINDATE,
+              customerId,
+              serviceClient,
+              logger,
+              loggingUtil,
+              correlationKey,
+            );
+
+            const subResults = mappingUtil.mapCustomerSubscriptionsToAttributesAccount(
+              customerId,
+              subscriptions,
+            );
+            await hullUtil.processIncomingData(subResults);
+            await redisClient.set(
+              `${connectorId}_events_lock`,
+              currentRunStart,
+              60 * 15,
+            );
+          },
+        );
+      }
+      // If we have invoices to process for accounts, execute
+      if (customerIdsToFetchInvoices.length !== 0) {
+        await asyncForEach(
+          customerIdsToFetchInvoices,
+          async (customerId: string) => {
+            const invoices = await this.fetchInvoicesForCustomer(
+              CHARGEBEE_MINDATE,
+              customerId,
+              serviceClient,
+              logger,
+              loggingUtil,
+              correlationKey,
+            );
+
+            const invoiceResults = mappingUtil.mapCustomerInvoicesToAttributesAccount(
+              customerId,
+              invoices,
+            );
+            await hullUtil.processIncomingData(invoiceResults);
+            await redisClient.set(
+              `${connectorId}_events_lock`,
+              currentRunStart,
+              60 * 15,
+            );
+          },
+        );
+      }
+      // Update the latest run date
+      await redisClient.set(
+        `${connectorId}_events_last`,
+        currentRunStart,
+        24 * 60 * 60,
+      );
+
+      hullClient.logger.info("incoming.job.success", {
+        correlation_key: correlationKey,
+        object_type: "events",
+        read_mode: "incremental",
+      });
+
+      logger.debug(
+        loggingUtil.composeOperationalMessage(
+          "OPERATION_FETCHINVOICES_SUCCESS",
+          correlationKey,
+        ),
+      );
+    } catch (error) {
+      console.error(error);
+      logger.error(
+        loggingUtil.composeErrorMessage(
+          "OPERATION_FETCHEVENTS_UNHANDLED",
+          cloneDeep(error),
+          correlationKey,
+        ),
+      );
+
+      hullClient.logger.error("incoming.job.error", {
+        error: error.message,
+        correlation_key: correlationKey,
+        object_type: "events",
+        read_mode: "incremental",
+      });
+    } finally {
+      // Release the lock, regardless of the outcome of the operation
+      try {
+        const connectorId = this.diContainer.resolve<string>("hullAppId");
+        const redisClient = this.diContainer.resolve<ConnectorRedisClient>(
+          "redisClient",
+        );
+        await redisClient.delete(`${connectorId}_events_lock`);
+      } catch (error) {
+        logger.error(
+          loggingUtil.composeErrorMessage(
+            "OPERATION_FETCHEVENTS_RELEASELOCKFAIL",
             error,
             correlationKey,
           ),

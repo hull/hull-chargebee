@@ -24,4 +24,15 @@ export type InvoiceAggregationType = "first" | "last";
 
 export type ConnectorReadType = "all" | "incremental";
 
-export type ConnectorFetchObjectType = "customers" | "invoices" | "subscriptions";
+export type ConnectorFetchObjectType =
+  | "customers"
+  | "invoices"
+  | "subscriptions"
+  | "events";
+
+export interface Schema$MapIncomingResult {
+  ident: unknown;
+  hullScope: "asUser" | "asAccount";
+  hullOperation: "traits" | "track" | "alias" | "unalias";
+  hullOperationParams: unknown[];
+}

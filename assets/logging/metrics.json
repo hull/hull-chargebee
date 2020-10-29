@@ -10,7 +10,12 @@
   "metricKey": "APP-READ-JOB"
 }, {
   "id": "OPERATION_FETCHSUBSCRIPIONS_COUNT",
-  "code": "13-001",
+  "code": "14-001",
+  "component": "SyncAgent",
+  "metricKey": "APP-READ-JOB"
+}, {
+  "id": "OPERATION_FETCHEVENTS_COUNT",
+  "code": "15-001",
   "component": "SyncAgent",
   "metricKey": "APP-READ-JOB"
 }, {

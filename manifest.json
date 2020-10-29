@@ -111,19 +111,9 @@
       "value": "30"
     },
     {
-      "url": "/fetch/customers/incremental",
+      "url": "/fetch/events/incremental",
       "type": "interval",
-      "value": "30"
-    },
-    {
-      "url": "/fetch/invoices/incremental",
-      "type": "interval",
-      "value": "30"
-    },
-    {
-      "url": "/fetch/subscriptions/incremental",
-      "type": "interval",
-      "value": "30"
+      "value": "5"
     }
   ],
   "subscriptions": [],

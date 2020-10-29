@@ -28,10 +28,13 @@ export const fetchActionFactory = (): RequestHandler => {
         case "subscriptions":
           syncAgent.fetchSubscriptions(fetchMode);
           break;
+        case "events":
+          syncAgent.fetchEvents();
+          break;
         default:
           break;
       }
-      res.status(200).json({ok: true });
+      res.status(200).json({ ok: true });
       return Promise.resolve(true);
     } catch (error) {
       if (logger) {

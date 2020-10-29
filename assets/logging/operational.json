@@ -74,6 +74,31 @@
   "component": "SyncAgent",
   "message": "A fetch for subscriptions is already in progress. Skipping..."
 }, {
+  "id": "OPERATION_FETCHEVENTS_START",
+  "code": "15-001",
+  "component": "SyncAgent",
+  "message": "Entered fetching events..."
+}, {
+  "id": "OPERATION_FETCHEVENTS_NOOP",
+  "code": "15-002",
+  "component": "SyncAgent",
+  "message": "No-op detected, no new events present."
+}, {
+  "id": "OPERATION_FETCHEVENTS_SUCCESS",
+  "code": "15-003",
+  "component": "SyncAgent",
+  "message": "Successfully fetched events from Chargebee."
+}, {
+  "id": "OPERATION_FETCHEVENTS_UPDATELASTRUNCACHE_START",
+  "code": "15-004",
+  "component": "SyncAgent",
+  "message": "Updating cache for last run time..."
+}, {
+  "id": "OPERATION_FETCHEVENTS_SKIPLOCK",
+  "code": "15-005",
+  "component": "SyncAgent",
+  "message": "A fetch for events is already in progress. Skipping..."
+}, {
   "id": "OPERATION_CONNECTORSTATUS_START",
   "code": "19-001",
   "component": "SyncAgent",
