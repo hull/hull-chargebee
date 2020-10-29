@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.8
+
+- [Feature] Improve synchronization frequency from 30 to 5 minutes and reduce data sent to the Hull platform.
+- [Feature] Use events API for fetching incremental data.
+
 ## v1.0.7
 
 - [Maintenance] Improve RedisClient set operation to avoid casting on string types.

@@ -44,6 +44,21 @@
   "component": "SyncAgent",
   "message": "Failed to release the lock for fetching subscriptions."
 }, {
+  "id": "OPERATION_FETCHEVENTS_UNHANDLED",
+  "code": "15-001",
+  "component": "SyncAgent",
+  "message": "Failed to fetch events due to an unhandled error."
+}, {
+  "id": "OPERATION_FETCHEVENTS_APIFAIL",
+  "code": "15-002",
+  "component": "SyncAgent",
+  "message": "Failed to fetch events from the Chargebee API."
+}, {
+  "id": "OPERATION_FETCHEVENTS_RELEASELOCKFAIL",
+  "code": "15-003",
+  "component": "SyncAgent",
+  "message": "Failed to release the lock for fetching events."
+}, {
   "id": "OPERATION_CONNECTORSTATUS_UNHANDLED",
   "code": "19-001",
   "component": "SyncAgent",
