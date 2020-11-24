@@ -1,6 +1,6 @@
 {
   "name": "hull-chargebee",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Hull Chargebee",
   "main": "src/index.ts",
   "scripts": {
