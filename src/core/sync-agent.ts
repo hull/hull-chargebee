@@ -630,6 +630,14 @@ export class SyncAgent {
         "subscription_renewed",
         "subscription_paused",
         "subscription_resumed",
+        "subscription_cancellation_scheduled",
+        "subscription_scheduled_cancellation_removed",
+        "subscription_changes_scheduled",
+        "subscription_scheduled_changes_removed",
+        "subscription_pause_scheduled",
+        "subscription_scheduled_pause_removed",
+        "subscription_resumption_scheduled",
+        "subscription_scheduled_resumption_removed",
       ];
       let hasMore: boolean = true;
       let nextOffset: string | undefined = undefined;
