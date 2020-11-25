@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.11
+
+- [Feature] Add scheduled subscription events to handle updates for.
+
 ## v1.0.10
 
 - [Feature] Add additional subscription events to handle updates for.
