@@ -24,46 +24,55 @@ export const server = (app: Application): Application => {
     },
   };
   // Add console as transport since we don't use a dedicated transport
-  // but rely on the OS to ship logs
-  loggerOptions.transports = [
-    new LogzioWinstonTransport({
-      token: process.env.LOGZIO_TOKEN as string,
-      host: "listener.logz.io",
-      protocol: "https",
-      name: loggerOptions.defaultMeta.service,
-      level: process.env.LOG_LEVEL || "error",
-    }),
-  ];
+  // but rely on the OS to ship logs if we don't push it out to logz.io
+  if (process.env.LOGZIO_TOKEN) {
+    loggerOptions.transports = [
+      new LogzioWinstonTransport({
+        token: process.env.LOGZIO_TOKEN as string,
+        host: "listener.logz.io",
+        protocol: "https",
+        name: loggerOptions.defaultMeta.service,
+        level: process.env.LOG_LEVEL || "error",
+      }),
+    ];
+  } else {
+    loggerOptions.transports = [];
+  }
 
-  if (process.env.NODE_ENV === "development") {
-    loggerOptions.transports.push(new transports.Console({
-      format: format.combine(
-        format.colorize({ all: true }),
-        format.timestamp(),
-        format.align(),
-        format.printf((info) => {
-          const { timestamp, level, message, ...args } = info;
-          const { meta } = info;
-          let metaStructured = "";
+  if (
+    process.env.NODE_ENV === "development" ||
+    loggerOptions.transports.length === 0
+  ) {
+    loggerOptions.transports.push(
+      new transports.Console({
+        format: format.combine(
+          format.colorize({ all: true }),
+          format.timestamp(),
+          format.align(),
+          format.printf((info) => {
+            const { timestamp, level, message, ...args } = info;
+            const { meta } = info;
+            let metaStructured = "";
 
-          if (meta) {
-            metaStructured = `${meta.component}#${meta.method}`;
-            delete args.meta;
-          }
+            if (meta) {
+              metaStructured = `${meta.component}#${meta.method}`;
+              delete args.meta;
+            }
 
-          let appInfo = "";
+            let appInfo = "";
 
-          if (args.service) {
-            appInfo = args.service;
-            delete args.service;
-          }
+            if (args.service) {
+              appInfo = args.service;
+              delete args.service;
+            }
 
-          return `[${appInfo}]  ${timestamp} | ${level} | ${metaStructured} |${message} ${
-            Object.keys(args).length > 0 ? JSON.stringify(args, null, 2) : ""
-          }`;
-        }),
-      ),
-    }));
+            return `[${appInfo}]  ${timestamp} | ${level} | ${metaStructured} |${message} ${
+              Object.keys(args).length > 0 ? JSON.stringify(args, null, 2) : ""
+            }`;
+          }),
+        ),
+      }),
+    );
   }
 
   const globalLogger = createLogger(loggerOptions);

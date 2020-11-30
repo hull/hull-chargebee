@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.12
+
+- [Feature] Make logz.io token optional and default to console for transports.
+
 ## v1.0.11
 
 - [Feature] Add scheduled subscription events to handle updates for.
