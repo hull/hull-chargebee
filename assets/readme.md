@@ -4,7 +4,7 @@ This Connector enables you to synchronize Chargebee Customers, Invoices and Subs
 
 > This is a BETA integration. Please report any issues you may encounter, so we can improve the user experience.
 
-This document was last updated on August 8, 2020. If you want to help us improve this documentation or have some feedback, please feel free to [open a GitHub issue](https://github.com/SMK1085/hull-chargebee/issues/new)!
+This document was last updated on August 8, 2020. If you want to help us improve this documentation or have some feedback, please feel free to [open a GitHub issue](https://github.com/hull/hull-chargebee/issues/new)!
 
 ## Getting Started
 
@@ -99,7 +99,7 @@ While we always strive to make integrations as uniform as possible, there are AP
 
 ### Where can I find the changelog for the Connector
 
-You can find the changelog on GitHub detailing what features have been added, what bugfixes have been applied and what technical maintenance measures have been taken: [Changelog](https://github.com/SMK1085/hull-chargebee/blob/master/CHANGELOG.md).
+You can find the changelog on GitHub detailing what features have been added, what bugfixes have been applied and what technical maintenance measures have been taken: [Changelog](https://github.com/hull/hull-chargebee/blob/master/CHANGELOG.md).
 
 ### This Connector is labelled as Beta, is it safe to use
 

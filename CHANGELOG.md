@@ -48,7 +48,6 @@
 ## v1.0.1
 
 - [Maintenance] Remove console logging from staging and production
-- [Maintenance] Update PM2 config to default to `staging`
 
 ## v1.0.0
 

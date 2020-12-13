@@ -105,3 +105,5 @@ dist
 
 # Typescript types
 build-types/
+.idea
+*.iml
