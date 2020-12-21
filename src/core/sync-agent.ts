@@ -741,6 +741,10 @@ export class SyncAgent {
       }
 
       // If we have subscriptions to process for accounts, execute
+      logger.info("incoming.job.progress", {
+        action: "fetch-subscriptions",
+        customerIds: customerIdsToFetchSubscriptions
+      });
       if (customerIdsToFetchSubscriptions.length !== 0) {
         await asyncForEach(
           customerIdsToFetchSubscriptions,
@@ -1183,6 +1187,24 @@ export class SyncAgent {
         );
       }
     }
+  }
+
+  getCustomerSubscriptions(customerId: string) {
+    const serviceClient = this.diContainer.resolve<ServiceClient>(
+      "serviceClient",
+    );
+    const logger = this.diContainer.resolve<Logger>("logger");
+    const loggingUtil = this.diContainer.resolve<LoggingUtil>("loggingUtil");
+    const correlationKey = this.diContainer.resolve<string>("correlationKey");
+
+    return this.fetchSubscriptionsForCustomer(
+      CHARGEBEE_MINDATE,
+      customerId,
+      serviceClient,
+      logger,
+      loggingUtil,
+      correlationKey,
+    );
   }
 
   private async fetchSubscriptionsForCustomer(
