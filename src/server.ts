@@ -8,6 +8,7 @@ import _ from "lodash";
 import { ClientOpts } from "redis";
 import { ConnectorRedisClient } from "./utils/redis-client";
 import { initializeScope } from "./middleware/express-scope";
+import bodyParser from "body-parser";
 
 export const server = (app: Application): Application => {
   // DI Container
@@ -91,6 +92,12 @@ export const server = (app: Application): Application => {
 
   // Status endpoints
   app.use("/status", actions.status());
+
+  app.post(
+    "/get-subscription",
+    bodyParser.json(),
+    actions.getSubscription()
+  );
 
   // Dispose the container when the server closes
   app.on("close", () => {
