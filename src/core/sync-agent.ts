@@ -749,6 +749,12 @@ export class SyncAgent {
         await asyncForEach(
           customerIdsToFetchSubscriptions,
           async (customerId: string) => {
+
+            logger.info("incoming.job.progress", {
+              message: "preparing-fetch-subscription",
+              customerId
+            });
+
             const subscriptions = await this.fetchSubscriptionsForCustomer(
               CHARGEBEE_MINDATE,
               customerId,
@@ -758,11 +764,29 @@ export class SyncAgent {
               correlationKey,
             );
 
+            logger.info("incoming.job.progress", {
+              message: "successful-fetch-subscription",
+              customerId,
+              subscriptions
+            });
+
             const subResults = mappingUtil.mapCustomerSubscriptionsToAttributesAccount(
               customerId,
               subscriptions,
             );
+
+            logger.info("incoming.job.progress", {
+              message: "mapped-fetch-subscription-results",
+              customerId,
+              subResults
+            });
+
             await hullUtil.processIncomingData(subResults);
+
+            logger.info("incoming.job.progress", {
+              action: "saved-fetch-subscription-results",
+              customerId
+            });
             await redisClient.set(
               `${connectorId}_events_lock`,
               currentRunStart,
