@@ -643,13 +643,15 @@ export class SyncAgent {
       let nextOffset: string | undefined = undefined;
       const customerIdsToFetchSubscriptions: string[] = [];
       const customerIdsToFetchInvoices: string[] = [];
+      let numAPICalls = 0;
       while (hasMore) {
-        logger.info(
-          loggingUtil.composeMetricMessage(
-            "OPERATION_SVCLIENTAPICALL_COUNT",
-            correlationKey,
-            1,
-          ),
+        numAPICalls += 1;
+        logger.info("incoming.job.progress", {
+            job: "fetch-events",
+            status: "pre-api-call",
+            occurredAfter,
+            offset: isNil(nextOffset) ? "" : nextOffset
+          }
         );
 
         const responseEvents: ApiResultObject<
@@ -661,8 +663,16 @@ export class SyncAgent {
           events,
           nextOffset,
         );
+
+        logger.info("incoming.job.progress", {
+          job: "fetch-events",
+          status: "post-api-call",
+          success: responseEvents.success,
+          numAPICalls
+        });
+
         if (responseEvents.success === false) {
-          logger.error(
+          logger.info(
             loggingUtil.composeErrorMessage(
               "OPERATION_FETCHEVENTS_APIFAIL",
               responseEvents.errorDetails,
@@ -673,6 +683,12 @@ export class SyncAgent {
           throw new Error(ERROR_CHARGEBEEAPI_READ("events"));
         }
         if (responseEvents.data) {
+          logger.info("incoming.job.progress", {
+              job: "fetch-events",
+              status: "processing-page",
+              size: responseEvents.data.list.length
+            }
+          );
           nextOffset = responseEvents.data.next_offset;
           await asyncForEach(
             responseEvents.data.list,
@@ -681,6 +697,15 @@ export class SyncAgent {
                 listItem.event.occurred_at,
               );
               if (eventOccurence < occurredAfter) {
+                try {
+                  logger.info("incoming.job.progress", {
+                      job: "fetch-events",
+                      status: "skip-event",
+                      customerId: isNil(listItem.event.content.customer.id) ? "unknown" : listItem.event.content.customer.id,
+                      subscription: isNil(listItem.event.content.subscription) ? "unknown" : listItem.event.content.subscription
+                    }
+                  );
+                } catch(er) {}
                 return;
               }
               const incomingResults = mappingUtil.mapChargebeeEventIncoming(
@@ -732,7 +757,9 @@ export class SyncAgent {
         } else {
           nextOffset = undefined;
         }
+
         hasMore = !isNil(nextOffset);
+        logger.info("incoming.job.progress", { job: "fetch-events", status: "page-finished", hasMore });
         await redisClient.set(
           `${connectorId}_events_lock`,
           currentRunStart,
@@ -740,20 +767,17 @@ export class SyncAgent {
         );
       }
 
+      logger.info("incoming.job.progress", { job: "fetch-events", status: "fetch-events-finished" });
+
       // If we have subscriptions to process for accounts, execute
       logger.info("incoming.job.progress", {
-        action: "fetch-subscriptions",
+        step: "fetch-subscriptions",
         customerIds: customerIdsToFetchSubscriptions
       });
       if (customerIdsToFetchSubscriptions.length !== 0) {
         await asyncForEach(
           customerIdsToFetchSubscriptions,
           async (customerId: string) => {
-
-            logger.info("incoming.job.progress", {
-              message: "preparing-fetch-subscription",
-              customerId
-            });
 
             const subscriptions = await this.fetchSubscriptionsForCustomer(
               CHARGEBEE_MINDATE,
@@ -764,29 +788,13 @@ export class SyncAgent {
               correlationKey,
             );
 
-            logger.info("incoming.job.progress", {
-              message: "successful-fetch-subscription",
-              customerId,
-              subscriptions
-            });
-
             const subResults = mappingUtil.mapCustomerSubscriptionsToAttributesAccount(
               customerId,
               subscriptions,
             );
 
-            logger.info("incoming.job.progress", {
-              message: "mapped-fetch-subscription-results",
-              customerId,
-              subResults
-            });
-
             await hullUtil.processIncomingData(subResults);
 
-            logger.info("incoming.job.progress", {
-              action: "saved-fetch-subscription-results",
-              customerId
-            });
             await redisClient.set(
               `${connectorId}_events_lock`,
               currentRunStart,
@@ -795,6 +803,11 @@ export class SyncAgent {
           },
         );
       }
+
+      logger.info("incoming.job.progress", {
+        step: "fetch-invoices",
+        customerIds: customerIdsToFetchInvoices
+      });
       // If we have invoices to process for accounts, execute
       if (customerIdsToFetchInvoices.length !== 0) {
         await asyncForEach(
@@ -843,7 +856,7 @@ export class SyncAgent {
       );
     } catch (error) {
       console.error(error);
-      logger.error(
+      logger.info(
         loggingUtil.composeErrorMessage(
           "OPERATION_FETCHEVENTS_UNHANDLED",
           cloneDeep(error),
@@ -851,7 +864,7 @@ export class SyncAgent {
         ),
       );
 
-      hullClient.logger.error("incoming.job.error", {
+      hullClient.logger.info("incoming.job.error", {
         error: error.message,
         correlation_key: correlationKey,
         object_type: "events",
