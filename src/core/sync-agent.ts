@@ -701,7 +701,7 @@ export class SyncAgent {
                   logger.info("incoming.job.progress", {
                       job: "fetch-events",
                       status: "skip-event",
-                      customerId: isNil(listItem.event.content.customer.id) ? "unknown" : listItem.event.content.customer.id,
+                      customerId: isNil(listItem.event.content.customer) ? "unknown" : listItem.event.content.customer.id,
                       subscription: isNil(listItem.event.content.subscription) ? "unknown" : listItem.event.content.subscription
                     }
                   );
