@@ -8,7 +8,7 @@ import {
   SKIP_NOOP,
   ERROR_CHARGEBEEAPI_READ,
 } from "./messages";
-import { isNil, cloneDeep, sortBy, first, last } from "lodash";
+import { compact, get, map, isNil, cloneDeep, sortBy, first, last } from "lodash";
 import { Logger } from "winston";
 import { LoggingUtil } from "../utils/logging-util";
 import IHullClient from "../types/hull-client";
@@ -686,7 +686,13 @@ export class SyncAgent {
           logger.info("incoming.job.progress", {
               job: "fetch-events",
               status: "processing-page",
-              size: responseEvents.data.list.length
+              size: responseEvents.data.list.length,
+              events: compact(map(responseEvents.data.list, e => {
+                return {
+                  customerId: get(e, "event.content.customer.id", null),
+                  eventType: get(e, "event.event_type", null)
+                };
+              }))
             }
           );
           nextOffset = responseEvents.data.next_offset;
