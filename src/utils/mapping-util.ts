@@ -22,7 +22,7 @@ import {
   ChargebeeEvent,
 } from "../core/service-objects";
 import { IHullUserClaims, IHullUserAttributes } from "../types/user";
-import { size, set, isNil, forIn, snakeCase, sum, sortBy, last, first } from "lodash";
+import { forEach, get, size, set, isNil, forIn, snakeCase, sum, sortBy, last, first } from "lodash";
 import { IHullAccountClaims, IHullAccountAttributes } from "../types/account";
 import { DateTime } from "luxon";
 import IHullUserEvent from "../types/user-event";
@@ -294,6 +294,28 @@ export class MappingUtil {
     });
 
     return hullEvent;
+  }
+
+  public mapCumulativeInvoices(
+    invoices: Array<Invoice>,
+  ): IHullAccountAttributes {
+    const attribs: IHullAccountAttributes = {};
+    const attributeGroup = "chargebee_cumulative_invoices"
+
+    forEach(invoices, invoice => {
+        const amount_paid = get(invoice, "amount_paid", null);
+        if (amount_paid) {
+          if (!attribs[`${attributeGroup}/total_spend`]) {
+            attribs[`${attributeGroup}/total_spend`] = 0;
+          }
+
+          // @ts-ignore
+          attribs[`${attributeGroup}/total_spend`] += amount_paid;
+        }
+    });
+
+
+    return attribs;
   }
 
   public mapInvoiceAggregationToAttributesAccount(
@@ -839,6 +861,7 @@ export class MappingUtil {
     }
     // Updated first and latest invoice
 
+    const cumulativeInvoiceAttribs = this.mapCumulativeInvoices(invoices);
     const oldestInvoiceAttribs = this.mapInvoiceAggregationToAttributesAccount(
       "first",
       oldestInvoice,
@@ -852,6 +875,7 @@ export class MappingUtil {
       latestInvoice,
     );
     const combinedAttribs = {
+      ...cumulativeInvoiceAttribs,
       ...oldestInvoiceAttribs,
       ...slInvoiceAttribs,
       ...latestInvoiceAttribs,
