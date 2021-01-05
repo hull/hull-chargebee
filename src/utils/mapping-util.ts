@@ -22,7 +22,7 @@ import {
   ChargebeeEvent,
 } from "../core/service-objects";
 import { IHullUserClaims, IHullUserAttributes } from "../types/user";
-import { set, isNil, forIn, snakeCase, sum, sortBy, last, first } from "lodash";
+import { size, set, isNil, forIn, snakeCase, sum, sortBy, last, first } from "lodash";
 import { IHullAccountClaims, IHullAccountAttributes } from "../types/account";
 import { DateTime } from "luxon";
 import IHullUserEvent from "../types/user-event";
@@ -304,6 +304,9 @@ export class MappingUtil {
     switch (aggregationType) {
       case "first":
         attribGroup += "_first_invoice";
+        break;
+      case "second_last":
+        attribGroup += "_sl_invoice";
         break;
       default:
         attribGroup += "_latest_invoice";
@@ -830,11 +833,19 @@ export class MappingUtil {
 
     const oldestInvoice = first(sortedInvoices) as Invoice;
     const latestInvoice = last(sortedInvoices) as Invoice;
+    let slInvoice = {} as Invoice;
+    if (size(sortedInvoices) > 1) {
+     slInvoice = sortedInvoices[size(sortedInvoices) - 2] as Invoice;
+    }
     // Updated first and latest invoice
 
     const oldestInvoiceAttribs = this.mapInvoiceAggregationToAttributesAccount(
       "first",
       oldestInvoice,
+    );
+    const slInvoiceAttribs = this.mapInvoiceAggregationToAttributesAccount(
+      "second_last",
+      slInvoice,
     );
     const latestInvoiceAttribs = this.mapInvoiceAggregationToAttributesAccount(
       "last",
@@ -842,6 +853,7 @@ export class MappingUtil {
     );
     const combinedAttribs = {
       ...oldestInvoiceAttribs,
+      ...slInvoiceAttribs,
       ...latestInvoiceAttribs,
     };
 

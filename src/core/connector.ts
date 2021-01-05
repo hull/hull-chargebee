@@ -20,7 +20,7 @@ export interface LogPayload {
   correlationKey?: string;
 }
 
-export type InvoiceAggregationType = "first" | "last";
+export type InvoiceAggregationType = "first" | "second_last" | "last";
 
 export type ConnectorReadType = "all" | "incremental";
 
