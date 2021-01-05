@@ -99,6 +99,12 @@ export const server = (app: Application): Application => {
     actions.getSubscription()
   );
 
+  app.post(
+    "/get-invoices",
+    bodyParser.json(),
+    actions.getInvoices()
+  );
+
   // Dispose the container when the server closes
   app.on("close", () => {
     globalLogger.debug("Shutting down application on CLOSE...");

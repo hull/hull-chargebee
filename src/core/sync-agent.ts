@@ -1250,6 +1250,24 @@ export class SyncAgent {
     );
   }
 
+  getCustomerInvoices(customerId: string) {
+    const serviceClient = this.diContainer.resolve<ServiceClient>(
+      "serviceClient",
+    );
+    const logger = this.diContainer.resolve<Logger>("logger");
+    const loggingUtil = this.diContainer.resolve<LoggingUtil>("loggingUtil");
+    const correlationKey = this.diContainer.resolve<string>("correlationKey");
+
+    return this.fetchInvoicesForCustomer(
+      CHARGEBEE_MINDATE,
+      customerId,
+      serviceClient,
+      logger,
+      loggingUtil,
+      correlationKey,
+    );
+  }
+
   private async fetchSubscriptionsForCustomer(
     updatedAfter: DateTime,
     customerId: string,
